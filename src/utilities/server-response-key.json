@@ -12,5 +12,10 @@
     "invalid_password": "Invalid password",
     "user_not_found": "User not found",
     "invalid_user_name": "Invalid user name",
-    "user_registered_successfully": "User registered successfully"
+    "user_registered_successfully": "User registered successfully",
+    "movie_data_is_required": "Movie data is required",
+    "movie_added_successfully": "Movie added successfully",
+    "user_role_is_not_allowed_for_the_request": "User role is not allowed for the request",
+    "movie_not_found": "Movie not found",
+    "movie_rated_successfully": "Movie rated successfully"
 }

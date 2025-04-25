@@ -74,13 +74,12 @@ const authenticateToken = async (req, res, next) => {
 					);
 				}
 
-				const { id, email } = user;
+				const { id, email, role } = user;
 
-				const isUserExist = await checkUserId(id, email);
+				const isUserExist = await checkUserId(id, email, role);
 				if (isUserExist) {
 					req.auth = {
 						id,
-						name,
 						email,
 						role
 					};

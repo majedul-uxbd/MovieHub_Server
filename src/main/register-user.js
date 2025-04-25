@@ -75,7 +75,7 @@ const insertUserQuery = async (userData) => {
  * email: string,
  * password: string
  * }} userData 
- * @returns 
+ * @description This function is used to register a new user 
  */
 const registerUser = async (userData) => {
     const password = userData.password;

@@ -8,9 +8,6 @@ const socketIo = require('socket.io');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 
-
-const { authRoute } = require("./routes/auth/auth.route");
-
 const app = express();
 const server = http.createServer(app);
 const io = socketIo(server, {
@@ -22,8 +19,12 @@ const io = socketIo(server, {
 app.use(cors());
 app.use(bodyParser.json());
 
+const { authRoute } = require("./routes/auth/auth.route");
+const { movieRouter } = require("./routes/movie/movie.route");
+
+
 app.use('/api/auth', authRoute);
-// app.use('/api/movies', require('./routes/movies'));
+app.use('/api/movies', movieRouter);
 // app.use('/api/admin', require('./routes/admin'));
 
 // Socket.IO
