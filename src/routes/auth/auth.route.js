@@ -85,6 +85,27 @@ authRoute.post('/refresh-token', (req, res) => {
     res.json({ token: newToken });
 });
 
+/**
+ * @description This API is used to user login
+ */
+authRoute.post("/user-data",
+    async (req, res) => {
+        userData(req.body.userData)
+            .then(data => {
+                return res.status(data.statusCode).send({
+                    status: data.status,
+                    message: data.message,
+                    token: data.data.token,
+                    data: data.data
+                })
+            })
+            .catch(error => {
+                return res.status(error.statusCode).send({
+                    status: error.status,
+                    message: error.message,
+                })
+            })
+    });
 
 
 module.exports = {

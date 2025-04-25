@@ -112,7 +112,7 @@ const userLogin = async (user) => {
     return Promise.resolve(
         setServerResponse(
             API_STATUS_CODE.ACCEPTED,
-            'User logged in successfully',
+            'user_login_successfully',
             userData
         )
     )

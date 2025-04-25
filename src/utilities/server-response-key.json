@@ -10,6 +10,7 @@
     "invalid_email_or_password": "Invalid email or password",
     "invalid_email": "Invalid Email address",
     "invalid_password": "Invalid password",
+    "User logged in successfully": "User logged in successfully",
     "user_not_found": "User not found",
     "invalid_user_name": "Invalid user name",
     "user_registered_successfully": "User registered successfully",
