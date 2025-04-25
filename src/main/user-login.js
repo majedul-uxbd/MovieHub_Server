@@ -12,22 +12,26 @@
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { setServerResponse } = require("../utilities/server-response");
+const { API_STATUS_CODE } = require("../consts/error-status");
+const { pool } = require("../../_DB/db");
 
 
 const userLoginQuery = async (user) => {
     const query = `
 	SELECT
         id,
-        username,
+        name,
+        email,
+        password,
         role
     FROM
         users
     WHERE
-        username = ? AND
+        email = ? AND
         is_active = ${1};
 	`;
     const values = [
-        user.username,
+        user.email,
     ];
 
     try {
@@ -41,6 +45,7 @@ const userLoginQuery = async (user) => {
 const generateToken = (userInfo) => {
     const token = jwt.sign({
         id: userInfo.id,
+        email: userInfo.email,
         role: userInfo.role,
     }, process.env.ACCESS_TOKEN_SECRET, {
         expiresIn: '90d'
@@ -51,8 +56,7 @@ const generateToken = (userInfo) => {
 
 /**
  * @param {{
- * module_id: string,
- * username: string,
+ * email: string,
  * password: string
  * }} user 
  * @description This function is used to get user data and token
@@ -61,9 +65,12 @@ const generateToken = (userInfo) => {
 const userLogin = async (user) => {
     let userInfo;
 
-    if (!user.username || !user.password) {
+    if (!user.email || !user.password) {
         Promise.reject(
-            setServerResponse(API_STATUS_CODE.BAD_REQUEST, 'username_or_password_is_required')
+            setServerResponse(
+                API_STATUS_CODE.BAD_REQUEST,
+                'email_or_password_is_required'
+            )
         );
     }
     try {
@@ -74,7 +81,7 @@ const userLogin = async (user) => {
 
     if (!userInfo) {
         return Promise.reject(
-            setServerResponse(API_STATUS_CODE.BAD_REQUEST, 'username_or_password_is_required')
+            setServerResponse(API_STATUS_CODE.BAD_REQUEST, 'invalid_email_or_password')
         );
     }
 
@@ -99,9 +106,9 @@ const userLogin = async (user) => {
     const userData = {
         token: token,
         id: userInfo.id,
+        email: userInfo.email,
         role: userInfo.role
     }
-    // console.warn('🚀 ~ file: user-login.js:105 ~ userLogin ~ userData:', userData);
     return Promise.resolve(
         setServerResponse(
             API_STATUS_CODE.ACCEPTED,

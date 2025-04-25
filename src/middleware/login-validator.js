@@ -5,42 +5,42 @@
  *
  * @copyright All right reserved Md. Majedul Islam
  * 
- * @description This middleware is used for Login validation
+ * @description 
  * 
  */
 const _ = require('lodash');
 const { API_STATUS_CODE } = require('../consts/error-status');
 const { setServerResponse } = require('../utilities/server-response');
-const { isValidUsername, isValidPassword } = require('../utilities/user-data-validator');
+const { isValidEmail, isValidPassword } = require('../utilities/user-data-validator');
 
 
 /**
  * @description This function will validate user login data
  */
 const loginUserValidation = async (req, res, next) => {
-    const user = {
-        username: req.body.username,
+    const userData = {
+        email: req.body.email,
         password: req.body.password
     }
 
-    if (_.isEmpty(user.username) || _.isEmpty(user.password)) {
+    if (_.isEmpty(userData.email) || _.isEmpty(userData.password)) {
         return res.status(API_STATUS_CODE.BAD_REQUEST).send(
             setServerResponse(
                 API_STATUS_CODE.BAD_REQUEST,
-                'username_or_password_is_required',
+                'email_or_password_is_required',
             )
         );
     } else {
-        if (!isValidUsername(user.username)) {
+        if (!isValidEmail(userData.email)) {
             return res.status(API_STATUS_CODE.BAD_REQUEST).send(
                 setServerResponse(
                     API_STATUS_CODE.BAD_REQUEST,
-                    'invalid_username',
+                    'invalid_email',
                 )
             );
         }
 
-        else if (!isValidPassword(user.password)) {
+        else if (!isValidPassword(userData.password)) {
             return res.status(API_STATUS_CODE.BAD_REQUEST).send(
                 setServerResponse(
                     API_STATUS_CODE.BAD_REQUEST,
@@ -50,7 +50,7 @@ const loginUserValidation = async (req, res, next) => {
         }
     }
 
-    req.body.user = user;
+    req.body.userData = userData;
     next();
 }
 

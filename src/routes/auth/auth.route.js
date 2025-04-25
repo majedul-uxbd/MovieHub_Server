@@ -12,8 +12,32 @@
 const express = require("express");
 const { loginUserValidation } = require("../../middleware/login-validator");
 const { userLogin } = require("../../main/user-login");
+const { registerUserValidation } = require("../../middleware/register-data-validator");
+const { registerUser } = require("../../main/register-user");
 
 const authRoute = express.Router();
+
+
+/**
+ * @description This is used to register a new user
+ */
+authRoute.post("/register",
+    registerUserValidation,
+    async (req, res) => {
+        registerUser(req.body.userData)
+            .then(data => {
+                return res.status(data.statusCode).send({
+                    status: data.status,
+                    message: data.message
+                })
+            })
+            .catch(error => {
+                return res.status(error.statusCode).send({
+                    status: error.status,
+                    message: error.message,
+                })
+            })
+    });
 
 /**
  * @description This is used to user login
@@ -21,7 +45,7 @@ const authRoute = express.Router();
 authRoute.post("/login",
     loginUserValidation,
     async (req, res) => {
-        userLogin(req.body.user)
+        userLogin(req.body.userData)
             .then(data => {
                 return res.status(data.statusCode).send({
                     status: data.status,
@@ -36,7 +60,6 @@ authRoute.post("/login",
                     message: error.message,
                 })
             })
-
     });
 
 
