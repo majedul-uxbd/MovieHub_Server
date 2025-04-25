@@ -16,3 +16,8 @@ Content-Type: application/json
     "email": "majedul@gmail.com",
     "password": "Test123!"
 }
+
+###
+POST http://localhost:4560/api/auth/refresh-token
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJtYWplZHVsQGdtYWlsLmNvbSIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc0NTU1NTg5OCwiZXhwIjoxNzUzMzMxODk4fQ.Nd1ovISuz-doWTh020ZA8VVatLIhV9O3DgOfkZMW1Xk
+Content-Type: application/json

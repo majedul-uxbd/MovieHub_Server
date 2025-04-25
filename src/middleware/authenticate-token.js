@@ -106,6 +106,32 @@ const authenticateToken = async (req, res, next) => {
 		}
 	};
 }
+
+const generateToken = (userInfo) => {
+	const token = jwt.sign({
+		id: userInfo.id,
+		email: userInfo.email,
+		role: userInfo.role,
+	}, process.env.ACCESS_TOKEN_SECRET, {
+		expiresIn: '90d'
+	});
+
+	return token;
+}
+
+const refreshToken = (oldToken) => {
+	try {
+		let token = oldToken.replace(/^[B|b]earer\s+/, '');
+		const payload = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
+		delete payload.iat;
+		delete payload.exp;
+		return generateToken(payload);
+	} catch (error) {
+		return null;
+	}
+}
+
 module.exports = {
-	authenticateToken
+	authenticateToken,
+	refreshToken
 };
