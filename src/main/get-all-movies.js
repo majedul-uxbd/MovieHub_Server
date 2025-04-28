@@ -16,16 +16,26 @@ const { pool } = require("../../_DB/db");
 
 const getAllMoviesQuery = async () => {
     const query = `
-        SELECT
-            id,
-            title,
-            created_at
-        FROM
-            movies;
+        SELECT 
+            m.id, 
+            m.title, 
+            IFNULL(AVG(r.rating), 0) AS avg_rating
+        FROM 
+            movies m
+        LEFT JOIN 
+            ratings r ON m.id = r.movie_id
     `;
     try {
         const [result] = await pool.query(query);
-        return result;
+        if (result && result.length > 0) {
+            return result.map((movie) => ({
+                id: movie.id,
+                title: movie.title,
+                avg_rating: parseFloat(movie.avg_rating) || 0,
+            }));
+        }
+
+        return false;
     } catch (error) {
         return Promise.reject(error);
     }

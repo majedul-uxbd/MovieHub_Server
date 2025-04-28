@@ -16,7 +16,8 @@ const { registerUserValidation } = require("../../middleware/register-data-valid
 const { registerUser } = require("../../main/register-user");
 const { setServerResponse } = require("../../utilities/server-response");
 const { API_STATUS_CODE } = require("../../consts/error-status");
-const { refreshToken } = require("../../middleware/authenticate-token");
+const { refreshToken, authenticateToken } = require("../../middleware/authenticate-token");
+const { getUserData } = require("../../main/get-user-data");
 
 const authRoute = express.Router();
 
@@ -89,8 +90,9 @@ authRoute.post('/refresh-token', (req, res) => {
  * @description This API is used to user login
  */
 authRoute.post("/user-data",
+    authenticateToken,
     async (req, res) => {
-        userData(req.body.userData)
+        getUserData(req.auth)
             .then(data => {
                 return res.status(data.statusCode).send({
                     status: data.status,

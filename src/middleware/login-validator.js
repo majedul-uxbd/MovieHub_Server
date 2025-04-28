@@ -22,6 +22,7 @@ const loginUserValidation = async (req, res, next) => {
         email: req.body.email,
         password: req.body.password
     }
+    console.warn('🚀 ~ loginUserValidation ~ userData:', userData);
 
     if (_.isEmpty(userData.email) || _.isEmpty(userData.password)) {
         return res.status(API_STATUS_CODE.BAD_REQUEST).send(

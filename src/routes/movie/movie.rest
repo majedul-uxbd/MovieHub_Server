@@ -14,7 +14,7 @@ POST http://localhost:4560/api/movies/get-movie
 Content-Type: application/json
 
 {
-    "id": 45
+    "id": 3
 }
 
 
