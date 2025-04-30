@@ -1,0 +1,29 @@
+POST http://localhost:4560/api/movies/add-movie
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJtYWplZHVsQGdtYWlsLmNvbSIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc0NTU1NTg5OCwiZXhwIjoxNzUzMzMxODk4fQ.Nd1ovISuz-doWTh020ZA8VVatLIhV9O3DgOfkZMW1Xk
+Content-Type: application/json
+
+{
+    "title": "The Shawshank Redemption"
+}
+
+###
+GET http://localhost:4560/api/movies/get-all-movies
+
+###
+POST http://localhost:4560/api/movies/get-movie
+Content-Type: application/json
+
+{
+    "id": 3
+}
+
+
+###
+POST http://localhost:4560/api/movies/rate-movie
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiZW1haWwiOiJyYWtpYnVsQGdtYWlsLmNvbSIsInJvbGUiOiJ1c2VyIiwiaWF0IjoxNzQ1NTYxMDIyLCJleHAiOjE3NTMzMzcwMjJ9.i4oLcmzPEoUouk5Zvd_SzfD6hkm5N0Y5KB7np9Jyomw
+Content-Type: application/json
+
+{
+    "id": 3,
+    "rating": 5
+}

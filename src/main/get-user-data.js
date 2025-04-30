@@ -16,7 +16,7 @@ const { API_STATUS_CODE } = require("../consts/error-status");
 const { pool } = require("../../_DB/db");
 
 
-const userLoginQuery = async (user) => {
+const userLoginQuery = async (authData) => {
     const query = `
 	SELECT
         id,
@@ -31,7 +31,7 @@ const userLoginQuery = async (user) => {
         is_active = ${1};
 	`;
     const values = [
-        user.email,
+        authData.email,
     ];
 
     try {
@@ -62,42 +62,16 @@ const generateToken = (userInfo) => {
  * @description This function is used to get user data and token
  * @returns 
  */
-const userLogin = async (user) => {
-    let userInfo;
-
-    if (!user.email || !user.password) {
-        Promise.reject(
-            setServerResponse(
-                API_STATUS_CODE.BAD_REQUEST,
-                'email_or_password_is_required'
-            )
-        );
-    }
+const getUserData = async (authData) => {
     try {
-        userInfo = await userLoginQuery(user);
+        userInfo = await userLoginQuery(authData);
     } catch (error) {
         return Promise.reject(error);
     }
 
     if (!userInfo) {
         return Promise.reject(
-            setServerResponse(API_STATUS_CODE.BAD_REQUEST, 'invalid_email_or_password')
-        );
-    }
-
-    let isPasswordCorrect;
-    try {
-        isPasswordCorrect = await bcrypt.compare(user.password, userInfo.password);  //compare user passwords
-    } catch (error) {
-        // console.log("🚀 ~ userLogin ~ error:", error)
-        return Promise.reject(
-            setServerResponse(API_STATUS_CODE.BAD_REQUEST, 'invalid_password')
-        );
-    }
-
-    if (!isPasswordCorrect) {
-        return Promise.reject(
-            setServerResponse(API_STATUS_CODE.BAD_REQUEST, 'invalid_password')
+            setServerResponse(API_STATUS_CODE.BAD_REQUEST, 'user_not_found')
         );
     }
 
@@ -118,5 +92,5 @@ const userLogin = async (user) => {
     )
 }
 module.exports = {
-    userLogin
+    getUserData
 }

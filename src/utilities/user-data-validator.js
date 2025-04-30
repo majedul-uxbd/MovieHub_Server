@@ -45,19 +45,19 @@ const isValidUsername = (username) => {
 /**
  * @description Validate user full name 
  */
-const isValidUserFullName = (fullName) => {
+const isValidUserName = (name) => {
 	const FULLNAME_MAX_LENGTH = 100;
 	const FULLNAME_MIN_LENGTH = 2;
-	if (_.isEmpty(fullName)) {
+	if (_.isEmpty(name)) {
 		return false;
 	} else {
-		if (!_.isString(fullName)) {
+		if (!_.isString(name)) {
 			return false;
 		} else {
 			// check length
 			if (
-				fullName.length > FULLNAME_MAX_LENGTH ||
-				fullName.length < FULLNAME_MIN_LENGTH
+				name.length > FULLNAME_MAX_LENGTH ||
+				name.length < FULLNAME_MIN_LENGTH
 			) {
 				return false;
 			}
@@ -261,7 +261,7 @@ const isValidComment = (comment) => {
 
 module.exports = {
 	isValidUsername,
-	isValidUserFullName,
+	isValidUserName,
 	isValidUserRole,
 	isValidEmail,
 	isValidUserAddress,

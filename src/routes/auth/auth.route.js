@@ -12,16 +12,44 @@
 const express = require("express");
 const { loginUserValidation } = require("../../middleware/login-validator");
 const { userLogin } = require("../../main/user-login");
+const { registerUserValidation } = require("../../middleware/register-data-validator");
+const { registerUser } = require("../../main/register-user");
+const { setServerResponse } = require("../../utilities/server-response");
+const { API_STATUS_CODE } = require("../../consts/error-status");
+const { refreshToken, authenticateToken } = require("../../middleware/authenticate-token");
+const { getUserData } = require("../../main/get-user-data");
 
 const authRoute = express.Router();
 
+
 /**
- * @description This is used to user login
+ * @description This API is used to register a new user
+ */
+authRoute.post("/register",
+    registerUserValidation,
+    async (req, res) => {
+        registerUser(req.body.userData)
+            .then(data => {
+                return res.status(data.statusCode).send({
+                    status: data.status,
+                    message: data.message
+                })
+            })
+            .catch(error => {
+                return res.status(error.statusCode).send({
+                    status: error.status,
+                    message: error.message,
+                })
+            })
+    });
+
+/**
+ * @description This API is used to user login
  */
 authRoute.post("/login",
     loginUserValidation,
     async (req, res) => {
-        userLogin(req.body.user)
+        userLogin(req.body.userData)
             .then(data => {
                 return res.status(data.statusCode).send({
                     status: data.status,
@@ -36,9 +64,50 @@ authRoute.post("/login",
                     message: error.message,
                 })
             })
-
     });
 
+/**
+ * @description This API is used to get refresh token
+ */
+authRoute.post('/refresh-token', (req, res) => {
+    const oldToken = (req.headers['authorization'] || req.body.token) + '';
+
+    // const oldToken = req.header.token;
+    const newToken = refreshToken(oldToken);
+    console.warn('🚀 ~ authRoute.post ~ newToken:', newToken);
+    if (!newToken) {
+        return res.status(API_STATUS_CODE.UNAUTHORIZED).send(
+            setServerResponse(
+                API_STATUS_CODE.UNAUTHORIZED,
+                'invalid_token'
+            )
+        );
+    };
+    res.json({ token: newToken });
+});
+
+/**
+ * @description This API is used to user login
+ */
+authRoute.post("/user-data",
+    authenticateToken,
+    async (req, res) => {
+        getUserData(req.auth)
+            .then(data => {
+                return res.status(data.statusCode).send({
+                    status: data.status,
+                    message: data.message,
+                    token: data.data.token,
+                    data: data.data
+                })
+            })
+            .catch(error => {
+                return res.status(error.statusCode).send({
+                    status: error.status,
+                    message: error.message,
+                })
+            })
+    });
 
 
 module.exports = {
